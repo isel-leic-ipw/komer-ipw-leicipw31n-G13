@@ -1,17 +1,24 @@
-/**
- * This file is responsible for being the entry point into the api
- * 
- */
-
+//File responsabilities
+//1-Include the API modules that configure the server , and provide them its dependencies
+//2-Launch the server and wait for requests
 
 import express from 'express'
+
+import dataInit from './komer-data-mem.mjs'
+const groupData = dataInit()
+
+import servicesInit from './komer-services.mjs'
+const services = servicesInit(groupData)
+
+//groups-api returns router
+import groupApiInit from './komer-web-api.mjs'
+const groupApi = groupApiInit(services)
+//import apiRecipes from "./komer-web-api.mjs"
 const app = express()
-const PORT = 8080
-app.use(express.json())
+const PORT = 1904
 
-import recipesApi from './komer-web-api.mjs'
-app.use(recipesApi)
+app.use(express.json()) //creates a middleware
 
-app.listen(PORT, () => console.log(`Example app listening at http://localhost:${PORT}`));
+app.use("/api",groupApi)
 
-
+app.listen(PORT, () => console.log(`Example app listening at http://localhost:${PORT}`))

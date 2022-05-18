@@ -1,50 +1,66 @@
-/*
-    modulo services é fundamental, é onde é implementada a logica da API 
-    manda gravar , mandar obter, manda aceder aos dados 
+//import dataMem from './komer-data-mem.mjs'
 
-    implement data access to memory storage 
+import { errors } from "./error.mjs"
 
-*/
+export default function(groupData) {
+    if(!groupData)
+        throw "Invalid group data object"
+    return {
+        getAll : getAll,
+        createGroup : createGroup,
+        editGroup : editGroup,
+        getAllGroups : getAllGroups,
+        deleteGroup : deleteGroup,
+        getGroupById : getGroupById,
+        addRecipeToGroup : addRecipeToGroup,
+        deleteRecipefromGroup : deleteRecipefromGroup
+    }     
 
 
-//import apidata  // ficheiro q é preciso fazer 
-
-
-
-export default {
-    FavRecipes,
-    getRecipe,
-    createGroup,
-}
-
-const favRecipes = [
-        {id: 1, title: "Batatas com atum ", summary: " Batatas com atum, uma delicia!"},
-        {id: 2, title: "Massa com atum ", summary: " Massa com atum, uma delicia!"},
-        {id: 3, title: "Alface com atum ", summary: " Alface com atum, uma delicia!"},
-        {id: 4, title: "Sandes com atum ", summary: " Sande com atum, uma delicia!"},
-        {id: 5, title: "Maionese com frango", summary: " Maionese com frango, uma delicia!"}
+    async function createGroup(name,description){
+        if(!name) return errors.INVALID_ARGUMENT("name")
+        if(!description) return errors.NOT_FOUND("description")
+        const newGroup = {name: name, description : description}
+        return groupData.createGroup(newGroup)
         
-]
+    }
 
-const nextGroupId = 0
+    async function getAll(){
+        return groupData.getAll()
+    }
 
-async function FavRecipes(){
-    return Promise.resolve(favRecipes)
+    async function editGroup(id, name, description){
+        if(!id) throw errors.INVALID_ARGUMENT("id")
+        if(!name) throw errors.INVALID_ARGUMENT("name")
+        if(!description) throw erros.INVALID_ARGUMENT("description")
+        const newGroup = {id: id, name : name , description : description }
+        return groupData.editGroup(newGroup)
+    }
 
+    async function getAllGroups(){
+        return groupData.getAllGroups()
+    }
+
+    async function deleteGroup(id){
+        if(!id) return errors.INVALID_ARGUMENT("id")
+        return groupData.deleteGroup(id)
+    }
+
+    async function getGroupById(id){
+        if(!id) return errors.INVALID_ARGUMENT("id")
+        return groupData.getGroupById(id)
+    }
+
+    async function addRecipeToGroup(id,recipe){
+        if(!id) throw errors.INVALID_ARGUMENT("id")
+        if(!recipe) throw errors.INVALID_ARGUMENT("recipe")
+            const recipes = {id : recipe.id,title : recipe.title,summary : recipe.summary}
+            return groupData.addRecipeToGroup(id, recipes)
+        }  
+
+    async function deleteRecipefromGroup(groupId, recipeId){
+        if(!groupId) throw errors.INVALID_ARGUMENT("groupId")
+        if(!recipeId) throw errors.INVALID_ARGUMENT("recipeId")
+        return groupData.deleteRecipefromGroup(groupId, recipeId)
+    }
 }
-
-async function getRecipe(name){
-    if(!name) return Promise.reject("Invalid Name")
-    const recipe = favRecipes.filter(r => r.name.includes(name)) 
-    if(!recipe) return Promise.reject("Not Found")
-    return Promise.resolve(recipe)
-}
-
-
-async function createGroup(name, description){
-    if(!name) return Promise.reject("Invalid name for group")
-    const groupID = nextGroupId++
-    const newGroup = {name : name, description : description, recipes : []}
-    return Promise.resolve(newGroup)
-}
-

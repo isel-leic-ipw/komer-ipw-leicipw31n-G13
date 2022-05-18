@@ -1,23 +1,20 @@
 {
-  "name": "komer-ipw-leicipw31n-g13",
+  "name": "serie_dois",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/isel-leic-ipw/komer-ipw-leicipw31n-G13.git"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "nodemon ./komer-server.mjs"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/isel-leic-ipw/komer-ipw-leicipw31n-G13/issues"
-  },
-  "homepage": "https://github.com/isel-leic-ipw/komer-ipw-leicipw31n-G13#readme",
   "dependencies": {
-    "express": "^4.18.1"
+    "express": "^4.18.1",
+    "node-fetch": "^3.2.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
   }
 }
