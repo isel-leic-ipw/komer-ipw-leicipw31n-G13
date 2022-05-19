@@ -6,7 +6,8 @@ export default function(groupData) {
     if(!groupData)
         throw "Invalid group data object"
     return {
-        getAll : getAll,
+        getPopRecipes : getPopRecipes,
+        getRecipesWithWord : getRecipesWithWord,
         createGroup : createGroup,
         editGroup : editGroup,
         getAllGroups : getAllGroups,
@@ -16,25 +17,26 @@ export default function(groupData) {
         deleteRecipefromGroup : deleteRecipefromGroup
     }     
 
-
-    async function createGroup(name,description){
-        if(!name) return errors.INVALID_ARGUMENT("name")
-        if(!description) return errors.NOT_FOUND("description")
-        const newGroup = {name: name, description : description}
-        return groupData.createGroup(newGroup)
-        
+    async function getPopRecipes(){
+        return groupData.getPopRecipes()
     }
 
-    async function getAll(){
-        return groupData.getAll()
+    async function getRecipesWithWord(word){
+        if(!word) throw errors.INVALID_ARGUMENT("word")
+        return groupData.getRecipesWithWord(word)
+    }
+
+    async function createGroup(name,description){
+        if(!name) throw errors.INVALID_ARGUMENT("name")
+        if(!description) throw errors.INVALID_ARGUMENT("description")
+        return groupData.createGroup(name, description)   
     }
 
     async function editGroup(id, name, description){
         if(!id) throw errors.INVALID_ARGUMENT("id")
         if(!name) throw errors.INVALID_ARGUMENT("name")
-        if(!description) throw erros.INVALID_ARGUMENT("description")
-        const newGroup = {id: id, name : name , description : description }
-        return groupData.editGroup(newGroup)
+        if(!description) throw errors.INVALID_ARGUMENT("description")
+        return groupData.editGroup(id, name, description)
     }
 
     async function getAllGroups(){
@@ -42,12 +44,12 @@ export default function(groupData) {
     }
 
     async function deleteGroup(id){
-        if(!id) return errors.INVALID_ARGUMENT("id")
+        //if(!id) throw errors.INVALID_ARGUMENT("id")
         return groupData.deleteGroup(id)
     }
 
     async function getGroupById(id){
-        if(!id) return errors.INVALID_ARGUMENT("id")
+        if(!id) throw errors.INVALID_ARGUMENT("id")
         return groupData.getGroupById(id)
     }
 
@@ -63,4 +65,8 @@ export default function(groupData) {
         if(!recipeId) throw errors.INVALID_ARGUMENT("recipeId")
         return groupData.deleteRecipefromGroup(groupId, recipeId)
     }
+
+    async function createNewUser(){
+
+    }   
 }

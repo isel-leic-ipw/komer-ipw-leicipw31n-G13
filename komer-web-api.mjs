@@ -11,58 +11,67 @@ export default function (services){
 
 
     //Configure CRUD routes to manage games
-    app.get('/get/recipes', handlerWrapper(getAll ))//Get the most popular recipes
-    app.post('/create/group', handlerWrapper(createGroup)) //create a group providing a name and a description
-    app.put('/edit/group' , handlerWrapper(editGroup)) //edit a group providing a name and a description
-    app.get('/get/groups', handlerWrapper(getAllGroups))   //Get all groups
-    app.delete('/delete/group',handlerWrapper(deleteGroup)) //delete a group
-    app.get('/get/group',handlerWrapper(getGroupById))  //Gets a group by it's id
-    app.put('/update/group',handlerWrapper(addRecipeToGroup)) //add a recipe to a group
-    app.delete('/delete/recipe', handlerWrapper(deleteRecipefromGroup)) //Removes a recipe from a group
+    app.get('/recipes', handlerWrapper(getPopRecipes))//Get the most popular recipes
+    app.get('/recipes/word', handlerWrapper(getRecipesWithWord)) //Get all the recipes with given word
+    app.put('/groups', handlerWrapper(createGroup)) //create a group providing a name and a description
+    app.put('/groups/edit' , handlerWrapper(editGroup)) //edit a group providing a name and a description
+    app.get('/groups', handlerWrapper(getAllGroups))   //Get all groups
+    app.delete('/groups',handlerWrapper(deleteGroup)) //delete a group
+    app.get('/groups/id',handlerWrapper(getGroupById))  //Gets a group by it's id
+    app.post('/groups/update',handlerWrapper(addRecipeToGroup)) //add a recipe to a group
+    app.delete('/groups/delete', handlerWrapper(deleteRecipefromGroup)) //Removes a recipe from a group
+    //app.put(/user,handlerWrapper(createNewUser)) //Create a new user
 
-    return app
+   return app
 
     function handlerWrapper(handler){
-
         return async function(req,res){
-            try{
+            try {
                 res.json(await handler(req,res))
-            } catch(e){
+            } catch(e) {
                 const error = handleError(e)
                 res.status(error.status).json(error.body)
             }
         }
     }
 
-    async function getAll(req,res){
-        return res.json(await services.getAll())
+    async function getPopRecipes(req,res){
+        res.json( await services.getPopRecipes())
+    }
+
+    async function getRecipesWithWord(req, res){
+        res.json(await services.getRecipesWithWord(req.body.word))
     }
 
     async function createGroup(req,res){
-        return res.json(await services.createGroup(req.body.name,req.body.description))
+        res.status(201).json(await services.createGroup(req.body.name,req.body.description))
     }
 
     async function editGroup(req,res){
-        return res.json(await services.editGroup(req.body.id, req.body.name, req.body.description))
+        res.json(await services.editGroup(req.body.id, req.body.name, req.body.description))
     }
 
     async function getAllGroups(req, res){
-        return res.json(await services.getAllGroups())
+        res.json(await services.getAllGroups())
     }
 
     async function deleteGroup(req,res){
-        return res.json(await services.deleteGroup(req.body.id))
+        res.json(await services.deleteGroup(req.body.id))
     }
 
     async function getGroupById(req, res){
-        return res.json(await services.getGroupById(req.body.id))
+        res.json(await services.getGroupById(req.body.id))
     }
 
     async function addRecipeToGroup(req,res){
-        return res.json(await services.addRecipeToGroup(req.body.id,req.body.recipe))
+        res.json(await services.addRecipeToGroup(req.body.id,req.body.recipe))
     }
 
     async function deleteRecipefromGroup(req,res){
-        return res.json(await services.deleteRecipefromGroup(req.body.groupId, req.body.recipeId))
+        res.json(await services.deleteRecipefromGroup(req.body.groupId, req.body.recipeId))
+    }
+
+    async function createNewUser(){
+        
     }
 }
