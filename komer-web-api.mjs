@@ -3,7 +3,8 @@
 // Have the functions that handle HTTP requests
 
 import express from 'express'
-import { response } from 'express'
+//import { response } from 'express'
+//import req from 'express/lib/request'
 import handleError from './http-errors.mjs'
 
 export default function (services){
@@ -18,14 +19,22 @@ export default function (services){
     app.get('/groups', handlerWrapper(getAllGroups))   //Get all groups
     app.delete('/groups',handlerWrapper(deleteGroup)) //delete a group
     app.get('/groups/id',handlerWrapper(getGroupById))  //Gets a group by it's id
-    app.post('/groups/update',handlerWrapper(addRecipeToGroup)) //add a recipe to a group
+    app.post('/groups',handlerWrapper(addRecipeToGroup)) //add a recipe to a group
     app.delete('/groups/delete', handlerWrapper(deleteRecipefromGroup)) //Removes a recipe from a group
     //app.put(/user,handlerWrapper(createNewUser)) //Create a new user
 
    return app
 
+    function setUserToken(req){
+        req.token = req.get("Authorization").split(' ')[1]
+
+    }
+    
+
     function handlerWrapper(handler){
         return async function(req,res){
+            setUserToken(req)
+            console.log(req.token)
             try {
                 res.json(await handler(req,res))
             } catch(e) {
@@ -35,8 +44,10 @@ export default function (services){
         }
     }
 
+
     async function getPopRecipes(req,res){
         res.json( await services.getPopRecipes())
+        
     }
 
     async function getRecipesWithWord(req, res){
@@ -64,7 +75,7 @@ export default function (services){
     }
 
     async function addRecipeToGroup(req,res){
-        res.json(await services.addRecipeToGroup(req.body.id,req.body.recipe))
+        res.json(await services.addRecipeToGroup(req.body.groupId,req.body.recipeId))
     }
 
     async function deleteRecipefromGroup(req,res){

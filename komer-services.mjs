@@ -17,29 +17,29 @@ export default function(groupData) {
         deleteRecipefromGroup : deleteRecipefromGroup
     }     
 
-    async function getPopRecipes(){
+    async function getPopRecipes(userToken){
         return groupData.getPopRecipes()
     }
 
-    async function getRecipesWithWord(word){
+    async function getRecipesWithWord(userToken,word){
         if(!word) throw errors.INVALID_ARGUMENT("word")
         return groupData.getRecipesWithWord(word)
     }
 
-    async function createGroup(name,description){
+    async function createGroup(userToken,name,description){
         if(!name) throw errors.INVALID_ARGUMENT("name")
         if(!description) throw errors.INVALID_ARGUMENT("description")
         return groupData.createGroup(name, description)   
     }
 
-    async function editGroup(id, name, description){
+    async function editGroup(userToken,id, name, description){
         if(!id) throw errors.INVALID_ARGUMENT("id")
         if(!name) throw errors.INVALID_ARGUMENT("name")
         if(!description) throw errors.INVALID_ARGUMENT("description")
         return groupData.editGroup(id, name, description)
     }
 
-    async function getAllGroups(){
+    async function getAllGroups(userToken){
         return groupData.getAllGroups()
     }
 
@@ -48,19 +48,18 @@ export default function(groupData) {
         return groupData.deleteGroup(id)
     }
 
-    async function getGroupById(id){
+    async function getGroupById(userToken,id){
         if(!id) throw errors.INVALID_ARGUMENT("id")
         return groupData.getGroupById(id)
     }
 
-    async function addRecipeToGroup(id,recipe){
+    async function addRecipeToGroup(userToken,groupId,recipeId){
         if(!id) throw errors.INVALID_ARGUMENT("id")
-        if(!recipe) throw errors.INVALID_ARGUMENT("recipe")
-            const recipes = {id : recipe.id,title : recipe.title,summary : recipe.summary}
-            return groupData.addRecipeToGroup(id, recipes)
+        if(!recipeId) throw errors.INVALID_ARGUMENT("recipeId")
+        return groupData.addRecipeToGroup(groupId, recipeId)
         }  
 
-    async function deleteRecipefromGroup(groupId, recipeId){
+    async function deleteRecipefromGroup(userToken,groupId, recipeId){
         if(!groupId) throw errors.INVALID_ARGUMENT("groupId")
         if(!recipeId) throw errors.INVALID_ARGUMENT("recipeId")
         return groupData.deleteRecipefromGroup(groupId, recipeId)

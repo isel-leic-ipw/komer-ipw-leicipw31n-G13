@@ -11,6 +11,11 @@ const recipes = [
     {id: 5, title: "Maionese com frango", summary: " Maionese com frango, uma delicia!"}
 ]
 
+const users = [
+    {userId: 1,userName : 'User1',authToken:'de469902-4040-47ff-8ea9-5f8ee4efaadc'},
+    {userId: 2,userName : 'User2',authToken:'3669e303-5758-4479-b139-94b2475c8554'}
+]
+
 let groups = [
     //{id : 1, name : "groupname1", description : "groupdescription1",recipes : [{"id": 2, "title": "Massa com atum ", "summary": " Massa com atum, uma delicia!"}]},
     //{id : 2 , name: "groupname2", description : "groupdescription2", recipes : []}
@@ -71,7 +76,7 @@ export default function(){
         if(idx == -1){
             throw errors.NOT_FOUND()
         }
-        const deletedGroup = groups[idx]
+        const deletedGroup = groups
         groups.splice(idx, 1)
         console.log(groups)
         return deletedGroup
@@ -85,14 +90,16 @@ export default function(){
         return group
     }
 
-    async function addRecipeToGroup(id,recipe){
-        const idx = groups.findIndex(g  => g.id == id)
-        if(groups[idx] == undefined) throw errors.NOT_FOUND()
-        if(groups[idx].recipes.find(r => r.id == recipe.id) == undefined){
-        groups[idx].recipes.push(recipe)
+    async function addRecipeToGroup(groupId,recipeId){
+        const idx = groups.findIndex(g  => g.id == groupId)
+        if(idx == -1) throw errors.NOT_FOUND()
+        const recipe = recipes.find(r => r.id == recipeId)
+        if(recipe == undefined) throw errors.NOT_FOUND()
+        if(groups[idx].recipes.find(r => r.id == recipeId) == undefined){
+            groups[idx].recipes.push(recipe)
         }
         else {
-            throw errors.REPEATED_VALUE(id)
+            throw errors.REPEATED_VALUE(recipeId)
         }
         return groups[idx]
     }
