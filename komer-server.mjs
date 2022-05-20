@@ -4,11 +4,14 @@
 
 import express from 'express'
 
-import dataInit from './komer-data-mem.mjs'
-const groupData = dataInit()
+import recipesdataInit from './komer-data-mem.mjs'
+const groupData = recipesdataInit()
+
+import usersdataInit from './users-data_mem.mjs'
+const usersData = usersdataInit()
 
 import servicesInit from './komer-services.mjs'
-const services = servicesInit(groupData)
+const services = servicesInit(groupData,usersData)
 
 //groups-api returns router
 import groupApiInit from './komer-web-api.mjs'

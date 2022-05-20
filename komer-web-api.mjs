@@ -26,8 +26,11 @@ export default function (services){
    return app
 
     function setUserToken(req){
-        req.token = req.get("Authorization").split(' ')[1]
-
+        const token = req.get("Authorization")
+        if(token){
+            req.token = token.split(' ')[1]
+            console.log(req.token)
+        }
     }
     
 
@@ -46,40 +49,40 @@ export default function (services){
 
 
     async function getPopRecipes(req,res){
-        res.json( await services.getPopRecipes())
+        return await services.getPopRecipes(req.token)
         
     }
 
     async function getRecipesWithWord(req, res){
-        res.json(await services.getRecipesWithWord(req.body.word))
+        return await services.getRecipesWithWord(req.token,req.body.word)
     }
 
     async function createGroup(req,res){
-        res.status(201).json(await services.createGroup(req.body.name,req.body.description))
+        res.status(201).json( await services.createGroup(req.token,req.body.name,req.body.description))
     }
 
     async function editGroup(req,res){
-        res.json(await services.editGroup(req.body.id, req.body.name, req.body.description))
+        return await services.editGroup(req.token,req.body.id, req.body.name, req.body.description)
     }
 
     async function getAllGroups(req, res){
-        res.json(await services.getAllGroups())
+        res.json(await services.getAllGroups(req.token))
     }
 
     async function deleteGroup(req,res){
-        res.json(await services.deleteGroup(req.body.id))
+        res.json(await services.deleteGroup(req.token,req.body.id))
     }
 
     async function getGroupById(req, res){
-        res.json(await services.getGroupById(req.body.id))
+        res.json(await services.getGroupById(req.token,req.body.id))
     }
 
     async function addRecipeToGroup(req,res){
-        res.json(await services.addRecipeToGroup(req.body.groupId,req.body.recipeId))
+        res.json(await services.addRecipeToGroup(req.token,req.body.groupId,req.body.recipeId))
     }
 
     async function deleteRecipefromGroup(req,res){
-        res.json(await services.deleteRecipefromGroup(req.body.groupId, req.body.recipeId))
+        res.json(await services.deleteRecipefromGroup(req.token,req.body.groupId, req.body.recipeId))
     }
 
     async function createNewUser(){

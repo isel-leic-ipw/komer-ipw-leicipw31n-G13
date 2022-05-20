@@ -11,14 +11,12 @@ const recipes = [
     {id: 5, title: "Maionese com frango", summary: " Maionese com frango, uma delicia!"}
 ]
 
-const users = [
-    {userId: 1,userName : 'User1',authToken:'de469902-4040-47ff-8ea9-5f8ee4efaadc'},
-    {userId: 2,userName : 'User2',authToken:'3669e303-5758-4479-b139-94b2475c8554'}
-]
 
 let groups = [
-    //{id : 1, name : "groupname1", description : "groupdescription1",recipes : [{"id": 2, "title": "Massa com atum ", "summary": " Massa com atum, uma delicia!"}]},
-    //{id : 2 , name: "groupname2", description : "groupdescription2", recipes : []}
+    {id : 1, name : "groupname1", description : "groupdescription1",recipes : [{"id": 2, "title": "Massa com atum ", "summary": " Massa com atum, uma delicia!"}],ownerUser:100},
+    {id : 2 , name: "groupname2", description : "groupdescription2", recipes : [],ownerUser:100},
+    {id : 3 , name: "groupname3", description : "groupdescription3", recipes : [],ownerUser:101},
+    {id : 4 , name: "groupname4", description : "groupdescription4", recipes : [],ownerUser:101},
 ]
 
 let nextId = groups.length + 1
@@ -46,35 +44,41 @@ export default function(){
         return auxArr
     }
 
-    async function createGroup(name,description){
+    async function createGroup(name,description,ownerUser){ //alterei este aqui
         const newId = nextId++
-        const newGroup = {id : newId, name : name , description : description, recipes: []}
+        const newGroup = {id : newId, name : name , description : description, recipes: [],ownerUser:ownerUser.userId}
         groups.push(newGroup)
         console.log(groups)
         return newGroup
 
     }
 
-    async function editGroup(id,name,description){ 
+    async function editGroup(userId,id,name,description){ 
         const idx = groups.findIndex(g => g.id == id)
         if(idx == -1) throw errors.NOT_FOUND()
+        if(groups[idx].ownerUser != userId){
+            throw errors.INVALID_USER()
+        }
         groups[idx].name = name
         groups[idx].description = description
         console.log(groups)
         return groups[idx]
     }
 
-    async function getAllGroups(){
+    async function getAllGroups(userId){
         if(groups.length == 0){
             throw errors.NOT_FOUND("There are no groups")
         }
-        return groups
+        return groups.filter(g => g.ownerUser == userId)
     }
 
-    async function deleteGroup(id){
+    async function deleteGroup(userId,id){
         const idx = groups.findIndex(g => g.id == id)
         if(idx == -1){
             throw errors.NOT_FOUND()
+        }
+        if(groups[idx].ownerUser != userId){
+            throw errors.INVALID_USER()
         }
         const deletedGroup = groups
         groups.splice(idx, 1)
@@ -82,17 +86,23 @@ export default function(){
         return deletedGroup
     }
 
-    async function getGroupById(id){
+    async function getGroupById(userId,id){
         const group = groups.find(g => g.id == id)
         if(group == undefined){
             throw errors.NOT_FOUND()
         }
+        if(group.ownerUser != userId){
+            throw errors.INVALID_USER()
+        }
         return group
     }
 
-    async function addRecipeToGroup(groupId,recipeId){
+    async function addRecipeToGroup(userId,groupId,recipeId){
         const idx = groups.findIndex(g  => g.id == groupId)
         if(idx == -1) throw errors.NOT_FOUND()
+        if(groups[idx].ownerUser != userId){
+            throw errors.INVALID_USER()
+        }
         const recipe = recipes.find(r => r.id == recipeId)
         if(recipe == undefined) throw errors.NOT_FOUND()
         if(groups[idx].recipes.find(r => r.id == recipeId) == undefined){
@@ -104,9 +114,12 @@ export default function(){
         return groups[idx]
     }
 
-    async function deleteRecipefromGroup(groupId, recipeId){
+    async function deleteRecipefromGroup(userId,groupId, recipeId){
         const group = groups.find(g => g.id == groupId)
         if(!group) throw errors.NOT_FOUND()
+        if(group.ownerUser != userId){
+            throw errors.INVALID_USER()
+        }
         if(group == undefined) throw errors.NOT_FOUND()
         const idx = group.recipes.findIndex(r => r.id == recipeId)
         if(idx == -1) throw errors.NOT_FOUND()
