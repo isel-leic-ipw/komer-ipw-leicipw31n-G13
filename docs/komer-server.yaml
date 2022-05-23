@@ -1,388 +1,632 @@
 openapi: 3.0.1
 info:
-  title: Recipes API 
+  title: Reipes API
   description: This is a simple Recipes API
-  contact:
-    email: you@your-company.com
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 servers:
   - description: Localhost server for testing API
-    url: http://localhost:8080/api
-
+    url: http://localhost:1904/api
 tags:
 - name: recipes
-- name: group
+- name: groups
 - name: users
 
 paths:
-  /poprecipes:
+  /recipes:
     get:
       tags:
       - recipes
-      summary: get popular recipes
-      description: By passing in the appropriate options, you can search for most popular recipes
+      summary: Gets the most popular recipes
+      description: Gets the most popular recipes
       operationId: getPopRecipes
-      security:
-        - bearerAuth: []
-      parameters:
-      - name: Authorization
-        in: header
-        required: false
-        schema:
-          type: string
-          format: uuid
-      - name: searchString
-        in: query
-        description: pass an optional search string for looking up popular recipes with that text
-        schema:
-          type: string
-      - name: skip
-        in: query
-        description: number of records to skip for pagination
-        schema:
-          minimum: 0
-          type: integer
-      - name: limit
-        in: query
-        description: maximum number of records to return
-        schema:
-          maximum: 50
-          minimum: 0
-          type: integer
       responses:
         200:
-          description: search results matching criteria
+          description: Fetched the most popular recipes
           content:
             application/json:
               schema:
                 type: array
-                items:
-                  $ref: '#/components/schemas/PopRecipes'
-        400:
-          description: bad input parameter
-          content: 
+                example: [{ 
+                            "id": 715424, 
+                            "title": The Best Chili, 
+                            "image": https://spoonacular.com/recipeImages/715419-312x231.jpg, 
+                            "imageType": jpg
+                          },
+                          {
+                            "id":776505,
+                            "title":"Sausage & Pepperoni Stromboli",
+                            "image":"https://spoonacular.com/recipeImages/776505-312x231.jpg",
+                            "imageType":"jpg"
+                          }]  
+        404:
+          description: The given token doesn't correspond to a known user
+          content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/InvalidRequest'
-  /recipes/{recipesWords}:
+              schema: 
+                type: object
+                properties:
+                  error:
+                      type: "string"
+                      example: "User Not Found"
+  /recipes/word:
     get:
       tags:
       - recipes
-      summary: Get some recipes given some words on the title of the recipe
-      description: Get some recipes given some words on the title of the recipe
-      operationId: getRecipeByWords
-      security:
-        - bearerAuth: []
+      summary: Gets recipes by word
+      description: Gets all the recipes that have the word passed as a paremeter in their title
+      operationId: getRecipesWithWord
       parameters:
-      - name: Authorization
-        in: header
-        schema:
-          type: string
-          format: uuid
-      - name: recipesWords
-        in: path
-        description: Some words of the tilte of the recipes to be fetched
+      - name: Word
+        in: body
         required: true
         schema:
-          type: integer
-          minimum: 1
+          type: object
+          properties: 
+            word: 
+              type: string
+              example: Spicy
       responses:
         200:
-          description: successful operation
+          description: Recipes successfully fetched
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RecipesWords'
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 715419
+                  title:
+                    type: string
+                    example: "Slow Cooker Spicy Hot Wings"
+                  image:
+                    type: string
+                    example: "https://spoonacular.com/recipeImages/715419-312x231.jpg"
+                  imageType:
+                    type: string
+                    example: "jpg"
         400:
-          description: Invalid Words supplied
+          description: The parameter is wrongfully passed
           content: 
-            application/json:
-              schema: 
-                type: string
-                example: Invalid words supplied
-        404:
-          description: Recipe not found
-          content: 
-            application/json:
-              schema: 
-                $ref: '#/components/schemas/InvalidRequest'
-                example: Recipe Not found
-  /group:
-    get:
-      tags:
-      - group
-      summary: gets all groups
-      description: gets all groups in the system
-      operationId: getGroup
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: Authorization
-          in: header
-          required: false
-          schema:
-            type: string
-            format: uuid  
-      responses:
-        201:
-          description: search results
-          content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Groups'
+                  type: object
+                  properties: 
+                    error:
+                      type: "string"
+                      example: "Invalid {parameter}"
         404:
-          description: Game not found
-          content: {}
+          description: One of the parameters doesn't correctly correspond
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  error:
+                      type: "string"
+                      example: "{parameter} Not Found"
+  /groups:
     put:
       tags:
-      - group
-      summary: updates a group
-      description: Updates a group in the system
-      operationId: updateGroup
-      security:
-        - bearerAuth: []
-      parameters:
-      - name: Authorization
-        in: header
-        required: true
-        schema:
-          type: string
-          format: uuid
-      - name: groupId
-        in: path
-        description: ID of the group to be update
-        required: true
-        schema:
-          type: integer
-      requestBody:
-        description: Group to update
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Groups'
-        required: false
-      responses:
-        201:
-          description: Group updated
-          content: {}
-        404:
-          description: Group not found
-          content: {}
-    delete:
-      tags:
-      - group
-      summary: Delete a group by it's ID
-      description: Delete a group  by it's ID
-      operationId: deleteGroup
-      security:
-        - bearerAuth: []
-      parameters:
-      - name: Authorization
-        in: header
-        required: true
-        schema:
-          type: string
-          format: uuid
-      - name: gameId
-        in: path
-        description: ID of the game to be deleted
-        required: true
-        schema:
-          type: integer
-      responses:
-        200:
-          description: Group deleted successfully
-        400:
-          description: Invalid ID supplied
-          content: {}
-        404:
-          description: Group not found
-          content: {}
-    post:
-      tags:
-      - group
-      summary: Creates a group
-      description: Creates a group in the system
+      - groups
+      summary: Creates a new group
+      description: Creates a new group with the parameters passed in the body
       operationId: createGroup
       parameters:
-      - name: groupId
-        in: path
-        description: ID of the group to be created
+      - name: name
+        in: body
         required: true
         schema:
-          type: integer
-      - name: groupName
-        in: path
-        description: Name of the group to be created
+          type: object
+          properties: 
+            name: 
+              type: string
+              example: Group3
+      - name: description
+        in: body
         required: true
         schema:
-          type: string
-      - name: groupDescription
-        in: path
-        description: Description of the group to be created
-        required: true
-        schema:
-          type: string    
-      requestBody:
-        description: Group to create
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateGroup'
-        required: false
+          type: object
+          properties: 
+            description:
+              type: string
+              example: Description of Group3
       responses:
         200:
-          description: group created
+          description: Group successfully created
           content:
             application/json:
               schema:
-                required:
-                - name
-                - description
                 type: object
                 properties:
+                  id:
+                    type: integer
+                    example: 3
                   name:
                     type: string
-                    example: Group of sweet recipes
+                    example: "Group3"
                   description:
                     type: string
-                    example: In this group there are the sweetest recipes  
+                    example: "Description of Group3"
+                  recipes:
+                    type: array
+                    example: []
         400:
-          description: Invalid input, object invalid
-          content: {}
-      x-codegen-request-body-name: group
-  /users:
-    post:
+          description: One of the parameters is wrongfully passed
+          content: 
+            application/json:
+              schema:
+                  type: object
+                  properties: 
+                    error:
+                      type: "string"
+                      example: "Invalid {parameter}"
+        404:
+          description: The given token doesn't correspond to a known user
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  error:
+                      type: "string"
+                      example: "User not found"
+    get:
       tags:
-      - users
-      summary: adds a user
-      description: Adds a user to the system
-      operationId: addUser
-      parameters:
-      - name: userId
-        in: path
-        description: ID of the user to be created
-        required: true
-        schema:
-          type: integer
-      - name: userName
-        in: path
-        description: Name of the user to be created
-        required: true
-        schema:
-          type: string
-      requestBody:
-        description: User to add
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/NewUser'
-        required: false
+      - groups
+      summary: Gets all groups of the user
+      description: Gets all groups of the user
+      operationId: getAllGroups
       responses:
-        201:
-          description: user created
+        200:
+          description: Successfully got all groups
           content:
             application/json:
               schema:
-                required:
-                - userID
-                - userName
+                type: array
+                example: [{
+                            "id": 1,
+                            "name": "Group1",
+                            "description": "Description of Group1",
+                            "recipes": []
+                          },
+                          {
+                            "id": 2,
+                            "name": "Group2",
+                            "description": "Description of Group2",
+                            "recipes": []
+                          }]
+        404:
+          description: The given token doesn't correspond to a known user
+          content:
+            application/json:
+              schema: 
                 type: object
                 properties:
-                  userID:
+                  error:
+                      type: "string"
+                      example: "User Not Found"
+        404(2):
+          description: The user doesn't have any group
+          content: 
+            application/json:
+              schema:
+                  type: object
+                  properties: 
+                    error:
+                      type: "string"
+                      example: "Groups Not Found"
+    delete:
+      tags: 
+      - groups
+      summary: Deletes a group
+      description: Deletes the group with id equal to the one passed as a parameter in the body
+      operationId: deleteGroup
+      parameters:
+      - name: id
+        in: body
+        required: true
+        schema:
+          type: object
+          properties: 
+            id: 
+              type: integer
+              example: 3
+      responses:
+        200:
+          description: Successfully deleted the group
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
                     type: integer
-                    example: 1904
-                  userName:
+                    example:  3
+                  name:
                     type: string
-                    example: Tiago  
+                    example: "Group3"
+                  description:
+                    type: string
+                    example: Description of Group3
+                  recipes:
+                    type: array
+                    example: []
         400:
-          description: Invalid input, object invalid
-          content: {}
-      x-codegen-request-body-name: user
-components:
-  securitySchemes:
-    bearerAuth:            # arbitrary name for the security scheme
-      type: http
-      scheme: bearer
-  schemas:
-    PopRecipes:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 38
-        title:
-          type: string
-          example: The best Tiramisu  
-    NewGame:
-      required:
-      - name
-      - userId
-      type: object
-      properties:
-        name:
-          type: string
-          example: Fifa
-        description:
-          type: string
-          example: Fifa game description
-        userId:
-          type: integer
-    NewUser:
-      required:
-      - userName
-      - userID
-      type: object
-      properties:
-        userId:
-          type: integer
-          example: 1904
-        userName:
-          type: string
-          example: Tiago    
-    RecipesWords:
-      required:
-      - words
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 1904
-        title:
-          type: string
-          example: Pasta with tuna  
-    CreateGroup:
-      required:
-      - groupName
-      - groupDescription
-      type: object
-      properties:
-        name:
-          type: string
-          example: Sweet Recipes
-        description:
-          type: string
-          example: Group of sweet recipes
-    Groups:
-      type: object
-      properties:
-        GroupID:
-          type: integer
-          example: 88
-        GroupName:
-          type: string
-          example: Group of sweet recipes
-        GroupDescription:
-          type: string
-          example: In this group there are the sweetest recipes         
-    InvalidRequest:
-      type: object
-      properties:
-        cause:
-          type: string
-          example: "Missing required parameter"
+          description: One of the parameters is wrongfully passed
+          content: 
+            application/json:
+              schema:
+                  type: object
+                  properties: 
+                    error:
+                      type: "string"
+                      example: "Invalid {parameter}"
+        401:
+          description: The user is unauthorized to delete the given group
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  error:
+                      type: "string"
+                      example: "Unauthorized User"
+        404:
+          description: One of the parameters doesn't correctly correspond
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  error:
+                      type: "string"
+                      example: "{parameter} Not Found"
+    post: 
+      tags:
+      - groups
+      summary: Adds a recipe to a group
+      description: Adds the recipe given as a parameter to the group passed as a parameter
+      operationId: addRecipeToGroup
+      parameters:
+      - name: groupId
+        in: body
+        required: true
+        schema:
+          type: object
+          properties: 
+            groupId: 
+              type: integer
+              example: 3
+      - name: recipeId
+        in: body
+        required: true
+        schema:
+          type: object
+          properties: 
+            recipeId:
+              type: integer
+              example: 715424
+      responses:
+        200:
+          description: Recipe successfully added to group
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 3
+                  name:
+                    type: string
+                    example: "Group3"
+                  description:
+                    type: string
+                    example: "Description of Group3"
+                  recipes:
+                    type: array
+                    example: [{"id": 715424, 
+                              "title": "The Best Chili", 
+                              "image": "https://spoonacular.com/recipeImages/715424-312x231.jpg", 
+                              "imageType": "jpg"}]
+        400:
+          description: One of the parameters is wrongfully passed
+          content: 
+            application/json:
+              schema:
+                  type: object
+                  properties: 
+                    error:
+                      type: "string"
+                      example: "Invalid {parameter}"
+        401:
+          description: The user is unauthorized to add a recipe to the given group
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  error:
+                      type: "string"
+                      example: "Unauthorized User"
+        404:
+          description: One of the parameters doesn't correctly correspond
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  error:
+                      type: "string"
+                      example: "{parameter} Not Found"
+  /groups/edit:
+    post:
+      tags:
+      - groups
+      summary: Edits group's parameters
+      description: Edits groups's parameters to the one's passed as parameters
+      operationId: editGroup
+      parameters:
+      - name: id
+        in: body
+        required: true
+        schema:
+          type: object
+          properties: 
+            id: 
+              type: integer
+              example: 1
+      - name: name
+        in: body
+        required: true
+        schema:
+          type: object
+          properties: 
+            name: 
+              type: string
+              example: new name for Group1
+      - name: description
+        in: body
+        required: true
+        schema:
+          type: object
+          properties: 
+            description: 
+              type: string
+              example: new description for Group1
+      responses:
+        200:
+          description: Group successfully edited
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: new name for Group1
+                  description:
+                    type: string
+                    example: new description for Group1
+                  recipes:
+                    type: array
+                    example: []
+        400:
+          description: One of the parameters is wrongfully passed
+          content: 
+            application/json:
+              schema:
+                  type: object
+                  properties: 
+                    error:
+                      type: "string"
+                      example: "Invalid {parameter}"
+        401:
+          description: The user is unauthorized to edit the given group
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  error:
+                      type: "string"
+                      example: "Unauthorized User"
+        404:
+          description: One of the parameters doesn't correctly correspond
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  error:
+                      type: "string"
+                      example: "{parameter} Not Found"
+  /groups/id: 
+    get:
+      tags:
+      - groups
+      summary: Gets the group with the given id
+      description: Gets the group with the same id as the one passed as a parameter in the body
+      operationId: getGroupById
+      parameters:
+      - name: id
+        in: body
+        required: true
+        schema:
+          type: object
+          properties: 
+            id: 
+              type: integer
+              example: 3
+      responses:
+        200:
+          description: Successfully got the group
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example:  3
+                  name:
+                    type: string
+                    example: "Group3"
+                  description:
+                    type: string
+                    example: Description of Group3
+                  recipes:
+                    type: array
+                    example: []
+        400:
+          description: The id is wrongfully passed
+          content: 
+            application/json:
+              schema:
+                  type: object
+                  properties: 
+                    error:
+                      type: "string"
+                      example: "Invalid id"
+        401:
+          description: The user is unauthorized to access the given group
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  error:
+                      type: "string"
+                      example: "Unauthorized User"
+        404:
+          description: There's not a group with the given id
+          content: 
+            application/json:
+              schema:
+                  type: object
+                  properties: 
+                    error:
+                      type: "string"
+                      example: "Not found"
+  /groups/delete:
+    delete:
+      tags: 
+      - groups
+      summary: Deletes a recipe from a group
+      description: Deletes the recipe with the id passed as a parameter from the group passed as parameter
+      operationId: deleteRecipeFromGroup
+      parameters:
+      - name: groupId
+        in: body
+        required: true
+        schema:
+          type: object
+          properties: 
+            groupId: 
+              type: integer
+              example: 3
+      - name: recipeId
+        in: body
+        required: true
+        schema:
+          type: object
+          properties: 
+            recipeId: 
+              type: integer
+              example: 3
+      responses:
+        200:
+          description: Successfully deleted the recipe
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example:  3
+                  name:
+                    type: string
+                    example: "Group3"
+                  description:
+                    type: string
+                    example: Description of Group3
+                  recipes:
+                    type: array
+                    example: []
+        400:
+          description: One of the parameters is wrongfully passed
+          content: 
+            application/json:
+              schema:
+                  type: object
+                  properties: 
+                    error:
+                      type: "string"
+                      example: "Invalid {parameter}"
+        401:
+          description: The user is unauthorized to delete from the given group
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  error:
+                      type: "string"
+                      example: "Unauthorized User"
+        404:
+          description: One of the parameters doesn't correctly correspond
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  error:
+                      type: "string"
+                      example: "{parameter} Not Found"
+  /users:
+    put:
+      tags:
+      - users
+      summary: Creates a new user
+      description: Creates a new user with the parameters passed in the body
+      operationId: createUser
+      parameters:
+      - name: userName
+        in: body
+        required: true
+        schema:
+          type: object
+          properties: 
+            userName: 
+              type: string
+              example: new user name
+      responses:
+        200:
+          description: Successfully created the user
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                            "userId": 102,
+                            "userName": "new user name",
+                            "authToken": "2bf89a26-12f2-4444-ab2c-928ef49d27b8"
+                          }
+        400:
+          description: The parameter is wrongfully passed
+          content: 
+            application/json:
+              schema:
+                  type: object
+                  properties: 
+                    error:
+                      type: "string"
+                      example: "Invalid userName"
