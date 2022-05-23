@@ -1,3 +1,5 @@
+//Constructing the error object containing the code and message parameters
+
 export const errorCodes = {
     INVALID_ARGUMENT: 1000,
     NOT_FOUND: 1001,
@@ -15,16 +17,10 @@ export const errors = {
     },
     NOT_FOUND : (errorMessage = '') => {
         errorMessage = errorMessage ? errorMessage + '' : errorMessage
-        if(errorMessage) {
             return{
                 code: errorCodes.NOT_FOUND,
-                message: `${errorMessage} Not found`
+                message: `${errorMessage} Not Found`
             }
-        }
-        return {
-            code: errorCodes.NOT_FOUND,
-            message: `Not found`
-        }
     },
     REPEATED_VALUE : (argumentId) => {
         return {

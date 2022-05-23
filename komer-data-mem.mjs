@@ -1,19 +1,19 @@
 // File responsibilities
 // Implement data access to memory storage
-import fetch from "node-fetch";
 import { errors } from "./error.mjs"
+import crypto from 'crypto'
+import recipes from './spoonacular-data.mjs'
 
-const recipes = [
-    {id: 1, title: "Batatas com atum ", summary: " Batatas com atum, uma delicia!"},
-    {id: 2, title: "Massa com atum ", summary: " Massa com atum, uma delicia!"},
-    {id: 3, title: "Alface com atum ", summary: " Alface com atum, uma delicia!"},
-    {id: 4, title: "Sandes com atum ", summary: " Sande com atum, uma delicia!"},
-    {id: 5, title: "Maionese com frango", summary: " Maionese com frango, uma delicia!"}
+let nextIdUser = 102
+
+const USERS = [
+    {userId: 100,userName : 'User1',authToken:'de469902-4040-47ff-8ea9-5f8ee4efaadc'},
+    {userId: 101,userName : 'User2',authToken:'3669e303-5758-4479-b139-94b2475c8554'},
+    {userId: 102,userName : 'User3',authToken:'286fc6f9-fdd6-4274-a783-5e1d3c36885e'}
 ]
 
-
 let groups = [
-    {id : 1, name : "groupname1", description : "groupdescription1",recipes : [{"id": 2, "title": "Massa com atum ", "summary": " Massa com atum, uma delicia!"}],ownerUser:100},
+    {id : 1, name : "groupname1", description : "groupdescription1",recipes : [],ownerUser:100},
     {id : 2 , name: "groupname2", description : "groupdescription2", recipes : [],ownerUser:100},
     {id : 3 , name: "groupname3", description : "groupdescription3", recipes : [],ownerUser:101},
     {id : 4 , name: "groupname4", description : "groupdescription4", recipes : [],ownerUser:101},
@@ -21,8 +21,10 @@ let groups = [
 
 let nextId = groups.length + 1
 
+
 export default function(){
     return{
+        getUserByToken : getUserByToken,
         getPopRecipes : getPopRecipes,
         getRecipesWithWord : getRecipesWithWord,
         createGroup : createGroup,
@@ -31,7 +33,16 @@ export default function(){
         deleteGroup : deleteGroup,
         addRecipeToGroup : addRecipeToGroup,
         getGroupById : getGroupById,
-        deleteRecipefromGroup : deleteRecipefromGroup
+        deleteRecipeFromGroup : deleteRecipeFromGroup,
+        createUser: createUser
+    }
+
+    async function getUserByToken(token){
+        const user = USERS.find(u => u.authToken == token)
+        if(!user){
+            throw errors.NOT_FOUND("User")
+        }
+        return user
     }
        
     async function getPopRecipes(){
@@ -40,11 +51,11 @@ export default function(){
 
     async function getRecipesWithWord(word){
         const auxArr = recipes.filter(recipe => recipe.title.includes(word))
-        if(auxArr.length == 0) throw errors.NOT_FOUND()
+        if(auxArr.length == 0) throw errors.NOT_FOUND(`Recipe with ${word}`)
         return auxArr
     }
 
-    async function createGroup(name,description,ownerUser){ //alterei este aqui
+    async function createGroup(name,description,ownerUser){
         const newId = nextId++
         const newGroup = {id : newId, name : name , description : description, recipes: [],ownerUser:ownerUser.userId}
         groups.push(newGroup)
@@ -55,7 +66,7 @@ export default function(){
 
     async function editGroup(userId,id,name,description){ 
         const idx = groups.findIndex(g => g.id == id)
-        if(idx == -1) throw errors.NOT_FOUND()
+        if(idx == -1) throw errors.NOT_FOUND("Group")
         if(groups[idx].ownerUser != userId){
             throw errors.INVALID_USER()
         }
@@ -66,22 +77,22 @@ export default function(){
     }
 
     async function getAllGroups(userId){
-        if(groups.length == 0){
-            throw errors.NOT_FOUND("There are no groups")
+        const filteredGroups = groups.filter(g => g.ownerUser == userId)
+        if(filteredGroups.length == 0){
+            throw errors.NOT_FOUND("Groups")
         }
-        return groups.filter(g => g.ownerUser == userId)
+        return filteredGroups
     }
 
     async function deleteGroup(userId,id){
         const idx = groups.findIndex(g => g.id == id)
         if(idx == -1){
-            throw errors.NOT_FOUND()
+            throw errors.NOT_FOUND("Group")
         }
         if(groups[idx].ownerUser != userId){
             throw errors.INVALID_USER()
         }
-        const deletedGroup = groups
-        groups.splice(idx, 1)
+        const deletedGroup = groups.splice(idx, 1)
         console.log(groups)
         return deletedGroup
     }
@@ -89,7 +100,7 @@ export default function(){
     async function getGroupById(userId,id){
         const group = groups.find(g => g.id == id)
         if(group == undefined){
-            throw errors.NOT_FOUND()
+            throw errors.NOT_FOUND("Group")
         }
         if(group.ownerUser != userId){
             throw errors.INVALID_USER()
@@ -99,12 +110,12 @@ export default function(){
 
     async function addRecipeToGroup(userId,groupId,recipeId){
         const idx = groups.findIndex(g  => g.id == groupId)
-        if(idx == -1) throw errors.NOT_FOUND()
+        if(idx == -1) throw errors.NOT_FOUND("Group")
         if(groups[idx].ownerUser != userId){
             throw errors.INVALID_USER()
         }
         const recipe = recipes.find(r => r.id == recipeId)
-        if(recipe == undefined) throw errors.NOT_FOUND()
+        if(recipe == undefined) throw errors.NOT_FOUND("Recipe")
         if(groups[idx].recipes.find(r => r.id == recipeId) == undefined){
             groups[idx].recipes.push(recipe)
         }
@@ -114,22 +125,27 @@ export default function(){
         return groups[idx]
     }
 
-    async function deleteRecipefromGroup(userId,groupId, recipeId){
+    async function deleteRecipeFromGroup(userId,groupId, recipeId){
         const group = groups.find(g => g.id == groupId)
-        if(!group) throw errors.NOT_FOUND()
+        if(group == undefined) throw errors.NOT_FOUND("Group")
         if(group.ownerUser != userId){
             throw errors.INVALID_USER()
         }
-        if(group == undefined) throw errors.NOT_FOUND()
         const idx = group.recipes.findIndex(r => r.id == recipeId)
-        if(idx == -1) throw errors.NOT_FOUND()
+        if(idx == -1) throw errors.NOT_FOUND("Recipe")
         group.recipes.splice(idx, 1)
         console.log(groups)
         return group
     }
 
-    async function createNewUser(){
-        
+    async function createUser(userName){
+        let userToken = crypto.randomUUID()
+        while(USERS.find(u => u.authToken == userToken)!= undefined){
+            userToken = crypto.randomUUID()
+        }
+        const user = {userId: nextIdUser ,userName : userName ,authToken: userToken}
+        USERS.push(user)
+        return user
     }
 }
 

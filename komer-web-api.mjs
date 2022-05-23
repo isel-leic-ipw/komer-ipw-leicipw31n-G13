@@ -13,15 +13,15 @@ export default function (services){
 
     //Configure CRUD routes to manage games
     app.get('/recipes', handlerWrapper(getPopRecipes))//Get the most popular recipes
-    app.get('/recipes/word', handlerWrapper(getRecipesWithWord)) //Get all the recipes with given word
+    app.get('/recipes/:word', handlerWrapper(getRecipesWithWord)) //Get all the recipes with given word
     app.put('/groups', handlerWrapper(createGroup)) //create a group providing a name and a description
-    app.put('/groups/edit' , handlerWrapper(editGroup)) //edit a group providing a name and a description
+    app.post('/groups/edit' , handlerWrapper(editGroup)) //edit a group providing a name and a description
     app.get('/groups', handlerWrapper(getAllGroups))   //Get all groups
     app.delete('/groups',handlerWrapper(deleteGroup)) //delete a group
     app.get('/groups/id',handlerWrapper(getGroupById))  //Gets a group by it's id
     app.post('/groups',handlerWrapper(addRecipeToGroup)) //add a recipe to a group
-    app.delete('/groups/delete', handlerWrapper(deleteRecipefromGroup)) //Removes a recipe from a group
-    //app.put(/user,handlerWrapper(createNewUser)) //Create a new user
+    app.delete('/groups/delete', handlerWrapper(deleteRecipeFromGroup)) //Removes a recipe from a group
+    app.put('/users',handlerWrapper(createUser)) //Creates a new user
 
    return app
 
@@ -33,7 +33,7 @@ export default function (services){
         }
     }
     
-
+    //Function that tries to execute the services functions if they throw an error then it's resolved and returns an object.
     function handlerWrapper(handler){
         return async function(req,res){
             setUserToken(req)
@@ -47,6 +47,7 @@ export default function (services){
         }
     }
 
+    //Functions that receive the request and response object, they execute the services functions.
 
     async function getPopRecipes(req,res){
         return await services.getPopRecipes(req.token)
@@ -54,7 +55,7 @@ export default function (services){
     }
 
     async function getRecipesWithWord(req, res){
-        return await services.getRecipesWithWord(req.token,req.body.word)
+        return await services.getRecipesWithWord(req.token,req.params.word)
     }
 
     async function createGroup(req,res){
@@ -66,26 +67,26 @@ export default function (services){
     }
 
     async function getAllGroups(req, res){
-        res.json(await services.getAllGroups(req.token))
+        return await services.getAllGroups(req.token)
     }
 
     async function deleteGroup(req,res){
-        res.json(await services.deleteGroup(req.token,req.body.id))
+        return await services.deleteGroup(req.token,req.body.id)
     }
 
     async function getGroupById(req, res){
-        res.json(await services.getGroupById(req.token,req.body.id))
+        return await services.getGroupById(req.token,req.body.id)
     }
 
     async function addRecipeToGroup(req,res){
-        res.json(await services.addRecipeToGroup(req.token,req.body.groupId,req.body.recipeId))
+        return await services.addRecipeToGroup(req.token,req.body.groupId,req.body.recipeId)
     }
 
-    async function deleteRecipefromGroup(req,res){
-        res.json(await services.deleteRecipefromGroup(req.token,req.body.groupId, req.body.recipeId))
+    async function deleteRecipeFromGroup(req,res){
+        return await services.deleteRecipeFromGroup(req.token,req.body.groupId, req.body.recipeId)
     }
 
-    async function createNewUser(){
-        
+    async function createUser(req,res){
+        return await services.createUser(req.body.userName)
     }
 }

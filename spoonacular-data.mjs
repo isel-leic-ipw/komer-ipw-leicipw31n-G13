@@ -1,24 +1,32 @@
+//File responsability is to fetch the recipes from the spoonacular api using the user's respective key
+
 import fetch from "node-fetch";
 
-const spoonacularKey = 'bc3e95af194f4cb9b657bcb7932e0672'
-const spoonacularURL = `https://api.spoonacular.com/recipes/complexSearch?apiKey=${spoonacularKey}&sort=popularity`
+const KEY = "bc3e95af194f4cb9b657bcb7932e0672"
+const RANDOM_RECIPES_URL = `https://api.spoonacular.com/recipes/complexSearch?apiKey=${KEY}`
 
-
- 
-
-async function fetchJSON(url) {
-    return fetch(url)
-        .then(rsp => rsp.json())
+async function fetchJSON(url){
+    const rsp = await fetch(url)
+    return rsp.json()
 }
           
-const arr = ['results']
+const recipeArray = ['results']
 
-const recipes = await fetchJSON(spoonacularURL).then(processRecipesPromises)
+const returnRecipes = await fetchJSON(RANDOM_RECIPES_URL).then(processRecipesPromises)
+
+function recipesTreteament(){
+    let treatRecipes = []
+    for(let i in returnRecipes){
+        treatRecipes.push(returnRecipes[i])
+    } 
+   return treatRecipes    
+}
    
+const recipes = recipesTreteament()
 
 function processRecipesPromises(r) {
-    const toRet = filterProperties(arr,r)
-    return JSON.stringify(toRet,null,'\n')
+    const toRet = filterProperties(recipeArray,r)
+    return toRet.results.map(r => r)
 }
 
 

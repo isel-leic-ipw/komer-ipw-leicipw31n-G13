@@ -1,14 +1,13 @@
-//import dataMem from './komer-data-mem.mjs'
+// File responsibilities
+// Implement all groups/recipes/users handling logic
 
 import { errors } from "./error.mjs"
 
-//import getUserByToken from "./users-data_mem.mjs"
+//Exporting all the services functions to the server
 
-export default function(groupData,usersData) {
+export default function(groupData) {
     if(!groupData)
-        throw "Invalid group data object" //O falcao disse que aqui é para lançar um objecto aplicacional e pra nós fazermos
-    if(!usersData)
-        throw "Invalid users data object" //O falcao disse que aqui é para lançar um objecto aplicacional e pra nós fazermos
+        throw "Invalid group data object" 
     return {
         getPopRecipes : validateUser(getPopRecipes),
         getRecipesWithWord : validateUser(getRecipesWithWord),
@@ -18,7 +17,8 @@ export default function(groupData,usersData) {
         deleteGroup : validateUser(deleteGroup),
         getGroupById : validateUser(getGroupById),
         addRecipeToGroup : validateUser(addRecipeToGroup),
-        deleteRecipefromGroup : validateUser(deleteRecipefromGroup)
+        deleteRecipeFromGroup : validateUser(deleteRecipeFromGroup),
+        createUser: validateUser(createUser)
     }     
 
     function validateUser(f){
@@ -32,67 +32,70 @@ export default function(groupData,usersData) {
             return f.apply(null, args)
         }
     }
-            
+    //Gets the most popular recipes
     async function getPopRecipes(userToken){
-        const user = await usersData.getUserByToken(userToken)
+        const user = await groupData.getUserByToken(userToken)
         if(!user) throw errors.INVALID_USER
-        return groupData.getPopRecipes(user.userId)
+        return groupData.getPopRecipes()
     }
-
+    //Searches for the recipes with the given word in the title
     async function getRecipesWithWord(userToken,word){
         if(!word) throw errors.INVALID_ARGUMENT("word")
-        const user = await usersData.getUserByToken(userToken)
+        const user = await groupData.getUserByToken(userToken)
         if(!user) throw errors.INVALID_USER
         return groupData.getRecipesWithWord(word)
     }
-
+    //Creates a new group
     async function createGroup(userToken,name,description){
         if(!name) throw errors.INVALID_ARGUMENT("name")
         if(!description) throw errors.INVALID_ARGUMENT("description")
-        const ownerUser = await usersData.getUserByToken(userToken)
+        const ownerUser = await groupData.getUserByToken(userToken)
         return groupData.createGroup(name,description, ownerUser)   
     }
-
+    //Edits a group's name and description
     async function editGroup(userToken,id, name, description){
         if(!id) throw errors.INVALID_ARGUMENT("id")
         if(!name) throw errors.INVALID_ARGUMENT("name")
         if(!description) throw errors.INVALID_ARGUMENT("description")
-        const user = await usersData.getUserByToken(userToken)
+        const user = await groupData.getUserByToken(userToken)
         return groupData.editGroup(user.userId,id, name, description)
     }
-
+    //Returns all respective user's groups
     async function getAllGroups(userToken){
-        const user = await usersData.getUserByToken(userToken)
+        const user = await groupData.getUserByToken(userToken)
         return groupData.getAllGroups(user.userId)
     }
-
+    //Deletes a respective user's groups receiving it's id
     async function deleteGroup(userToken,id){
-        //if(!id) throw errors.INVALID_ARGUMENT("id")
-        const user = await usersData.getUserByToken(userToken)
+        if(!id) throw errors.INVALID_ARGUMENT("id")
+        const user = await groupData.getUserByToken(userToken)
         return groupData.deleteGroup(user.userId,id)
     }
-
+    //Returns a respective user's group receiving it's id
     async function getGroupById(userToken,id){
         if(!id) throw errors.INVALID_ARGUMENT("id")
-        const user = await usersData.getUserByToken(userToken)
+        const user = await groupData.getUserByToken(userToken)
         return groupData.getGroupById(user.userId,id)
     }
-
+    //Adds a recipe to a respective user's group
     async function addRecipeToGroup(userToken,groupId,recipeId){
         if(!groupId) throw errors.INVALID_ARGUMENT("groupId")
         if(!recipeId) throw errors.INVALID_ARGUMENT("recipeId")
-        const user = await usersData.getUserByToken(userToken)
+        const user = await groupData.getUserByToken(userToken)
         return groupData.addRecipeToGroup(user.userId, groupId,recipeId)
         }  
-
-    async function deleteRecipefromGroup(userToken,groupId, recipeId){
+    //Deletes a recipe from a respectives user's group
+    async function deleteRecipeFromGroup(userToken,groupId, recipeId){
         if(!groupId) throw errors.INVALID_ARGUMENT("groupId")
         if(!recipeId) throw errors.INVALID_ARGUMENT("recipeId")
-        const user = await usersData.getUserByToken(userToken)
-        return groupData.deleteRecipefromGroup(user.userId,groupId, recipeId)
+        const user = await groupData.getUserByToken(userToken)
+        return groupData.deleteRecipeFromGroup(user.userId,groupId, recipeId)
     }
-
-    async function createNewUser(){
-
+    //Creates a new user
+    async function createUser(userName){
+        if(!userName) throw errors.INVALID_ARGUMENT("userName")
+        return groupData.createUser(userName)
     }   
 }
+
+
