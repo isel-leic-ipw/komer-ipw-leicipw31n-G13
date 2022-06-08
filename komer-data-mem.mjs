@@ -16,7 +16,8 @@ let groups = [
     {id : 1, name : "groupname1", description : "groupdescription1",recipes : [],ownerUser:100},
     {id : 2 , name: "groupname2", description : "groupdescription2", recipes : [],ownerUser:100},
     {id : 3 , name: "groupname3", description : "groupdescription3", recipes : [],ownerUser:101},
-    {id : 4 , name: "groupname4", description : "groupdescription4", recipes : [],ownerUser:101},
+    {id : 4 , name: "groupname4", description : "groupdescription4", recipes : [{id: 715424,title: "The Best Chili",image: "https://spoonacular.com/recipeImages/715424-312x231.jpg",imageType: "jpg"
+    },],ownerUser:101},
 ]
 
 let nextId = groups.length + 1

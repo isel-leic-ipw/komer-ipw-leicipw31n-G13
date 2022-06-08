@@ -14,11 +14,11 @@ export default function (services){
     //Configure CRUD routes to manage games
     app.get('/recipes', handlerWrapper(getPopRecipes))//Get the most popular recipes
     app.get('/recipes/:word', handlerWrapper(getRecipesWithWord)) //Get all the recipes with given word
-    app.put('/groups', handlerWrapper(createGroup)) //create a group providing a name and a description
+    app.post('/groups', handlerWrapper(createGroup)) //create a group providing a name and a description
     app.post('/groups/edit' , handlerWrapper(editGroup)) //edit a group providing a name and a description
     app.get('/groups', handlerWrapper(getAllGroups))   //Get all groups
     app.delete('/groups',handlerWrapper(deleteGroup)) //delete a group
-    app.get('/groups/id',handlerWrapper(getGroupById))  //Gets a group by it's id
+    app.get('/groups/:id',handlerWrapper(getGroupById))  //Gets a group by it's id
     app.post('/groups',handlerWrapper(addRecipeToGroup)) //add a recipe to a group
     app.delete('/groups/delete', handlerWrapper(deleteRecipeFromGroup)) //Removes a recipe from a group
     app.put('/users',handlerWrapper(createUser)) //Creates a new user
@@ -37,9 +37,9 @@ export default function (services){
     function handlerWrapper(handler){
         return async function(req,res){
             setUserToken(req)
-            console.log(req.token)
+            console.log(req.token) 
             try {
-                res.json(await handler(req,res))
+                await handler(req,res) //tiramos o res.json()
             } catch(e) {
                 const error = handleError(e)
                 res.status(error.status).json(error.body)
@@ -75,7 +75,7 @@ export default function (services){
     }
 
     async function getGroupById(req, res){
-        return await services.getGroupById(req.token,req.body.id)
+        return await services.getGroupById(req.token,req.params.id)
     }
 
     async function addRecipeToGroup(req,res){
