@@ -12,6 +12,13 @@ import recipesDataInit from './data/komer-data-mem.mjs'
 const usersData = recipesDataInit()
 
 import {fileURLToPath} from 'url'
+<<<<<<< HEAD
+=======
+
+import hbs from 'hbs';
+
+const groupData = recipesdataInit()
+>>>>>>> b8412259634bfe1704fff34eb28ca9b8693b1ca1
 
 import hbs from 'hbs';
 
@@ -22,9 +29,15 @@ import servicesInit from './services/komer-services.mjs'
 const services = servicesInit(groupsData,usersData)
 
 //groups-api returns router
+<<<<<<< HEAD
 import groupApiInit from './api/komer-web-api.mjs'
 
 import komerWebSiteInit from './api/komer-web-site.mjs'
+=======
+import groupApiInit from './komer-web-api.mjs'
+
+import komerWebSiteInit from './komer-web-site.mjs'
+>>>>>>> b8412259634bfe1704fff34eb28ca9b8693b1ca1
 const komerWebSite = komerWebSiteInit(services)
 
 const groupApi = groupApiInit(services)

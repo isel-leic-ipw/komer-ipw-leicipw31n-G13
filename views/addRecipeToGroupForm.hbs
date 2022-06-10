@@ -16,12 +16,11 @@
                     <h3>Choose the group you want to add the recipe "{{this.title}}"</h3>
                     {{#each ../g}}
                         <form method="POST" action="/groups/recipes/{{id}}">
-                            <input type="submit" value="{{name}}"/>
-                            <input type="hidden" id="recipeId" name="recipeId" value="{{../id}}">
-                        </form>
+                        <input type="submit" value="{{name}}"/>
                         <p></p>
                     {{/each}}    
-
+                    <input type="hidden" id="recipeId" name="recipeId" value="{{id}}">
+                    </form>
                 {{/each}}
             </div>
         </div>
