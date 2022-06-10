@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            {{title}}
+        </title>
+    </head> 
+    <body>
+        {{#each r}}
+        <div class="row">
+        <div class="col"> 
+        <h3>
+            {{title}}
+        </h3>
+        <h4>
+            {{id}}
+        </h4>
+        <h5>
+            {{summary}}
+            {{ingredients}}
+            {{steps}}
+        </h5>
+        </div>
+        <div class = "col">
+        <button onclick="document.location='/groups/recipe/{{title}}'">Add this recipe to a group</button>
+        </div>
+        </div>
+        <hr>
+        {{/each}}
+    </body>
+</html>
