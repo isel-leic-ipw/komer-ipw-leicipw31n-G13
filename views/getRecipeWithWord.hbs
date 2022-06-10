@@ -4,25 +4,26 @@
         <title>
             {{title}}
         </title>
-    </head> 
+        <style>
+            a {
+                    color: black;
+                    background-color: transparent;
+                    text-decoration: none;
+                    }
+        </style>
+    </head>
     <body>
         {{#each r}}
         <div class="row">
         <div class="col"> 
-        <h3>
-            {{title}}
-        </h3>
-        <h4>
-            {{id}}
-        </h4>
+        <h2>
+            <a aria-current="page" href="/recipe/{{this.title}}">{{title}}</a>
+        </h2>
         <h5>
             {{summary}}
             {{ingredients}}
             {{steps}}
         </h5>
-        </div>
-        <div class = "col">
-        <button onclick="document.location='/groups/recipe/{{title}}'">Add this recipe to a group</button>
         </div>
         </div>
         <hr>

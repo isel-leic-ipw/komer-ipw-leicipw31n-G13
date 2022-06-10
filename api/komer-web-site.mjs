@@ -5,8 +5,8 @@
 import express from 'express'
 
 import handleError from './http-errors.mjs'
-//TEMOS QUE TIRAR ISTO---------------------------------------------------------------------------------------------------------------
-let userToken = "de469902-4040-47ff-8ea9-5f8ee4efaadc"
+
+let userToken
 
 export default function (services){
     const app = express.Router()

@@ -17,10 +17,10 @@
                     {{#each ../g}}
                         <form method="POST" action="/groups/recipes/{{id}}">
                         <input type="submit" value="{{name}}"/>
+                        <input type="hidden" id="recipeId" name="recipeId" value="{{../id}}">
+                        </form>
                         <p></p>
                     {{/each}}    
-                    <input type="hidden" id="recipeId" name="recipeId" value="{{id}}">
-                    </form>
                 {{/each}}
             </div>
         </div>
