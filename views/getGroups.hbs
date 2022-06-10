@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            img {width: 30px;}
+            a {
+                color: black;
+                background-color: transparent;
+                text-decoration: none;
+                }
+        </style>
+        <title>
+            {{title}}
+        </title>
+    </head> 
+    <body>
+        <link rel="stylesheet" href="/icons/food.png">
+        {{#each g}}
+        <div class="row">
+        <div class="col">
+            <h3><a aria-current="page" href="/groups/{{id}}">{{name}}</a></h3>
+            <h4><p>{{description}}</p></h4>
+        </div>
+        <div class="col">
+            <form method="POST" action="/groups/delete/{{id}}">
+                <button><img src="https://www.pngplay.com/wp-content/uploads/7/Delete-Icon-Background-PNG-Image.png"></button>
+            </form>
+        </div>
+        </div>
+        {{/each}}
+        <button onclick="document.location='/groups/create'">Create a new group</button>
+    </body>
+</html>
+
+

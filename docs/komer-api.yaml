@@ -109,7 +109,7 @@ paths:
                       type: "string"
                       example: "{parameter} Not Found"
   /groups:
-    put:
+    post:
       tags:
       - groups
       summary: Creates a new group
