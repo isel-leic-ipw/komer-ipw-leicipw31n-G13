@@ -2,28 +2,21 @@
 
 import fetch from "node-fetch";
 
-const KEY = "f72dc516d52547adbe0b67929e971b24"
+const KEY = "2080371aedf049c8b72cd887b2ec9b54"
 const POP_RECIPES_URL = `https://api.spoonacular.com/recipes/complexSearch?apiKey=${KEY}`
-const RECIPE_ID = 715594
-const RECIPE_DETAILS_URL = `https://api.spoonacular.com/recipes/${RECIPE_ID}/information?apiKey=${KEY}`
 
 async function fetchJSON(url){
-    const rsp = await fetch(url)
-    return rsp.json()
+    return fetch(url).then(res => res.json())
 }
           
 const recipeArray = ['results']
 
 const returnRecipes = await fetchJSON(POP_RECIPES_URL).then(processRecipesPromises) 
-//const returnRecipes = await fetchJSON(RECIPE_DETAILS_URL).then(processRecipesPromises)
-
-//console.log(returnRecipes)
-
    
-const recipes = recipesTreteament()
-console.log(recipes)
+const recipes = recipesTreatement()
+//console.log(recipes)
 
-function recipesTreteament(){
+function recipesTreatement(){
     let treatRecipes = []
     for(let i in returnRecipes){
         treatRecipes.push(returnRecipes[i])
@@ -33,7 +26,7 @@ function recipesTreteament(){
 
 function processRecipesPromises(r) {
     const toRet = filterProperties(recipeArray,r)
-    return toRet.results //tirei o desta linha!!!
+    return toRet.results
     
 }
 
@@ -43,10 +36,24 @@ function filterProperties(arr,obj){
                                            object[key] = obj[key];
                                            return object 
                                        },{});
-                                       console.log(propFiltered)
+                                       
 
     return propFiltered                                  
 
 }
 
-export default recipes
+async function recipeDetails(id){
+    const url = `https://api.spoonacular.com/recipes/${id}/information?apiKey=${KEY}`
+    const arr = ['id', 'title', 'summary', 'extendedIngredients', 'steps', 'spoonacularSourceUrl']
+    const rec =  await fetchJSON(url)
+    const recipe = filterProperties(arr, rec)
+    recipe.summary = recipe.summary.replaceAll('<b>', '')
+    recipe.summary = recipe.summary.replaceAll('</b>', '')
+    console.log("Recipe Details ->" + recipe + " Recipe DetailsEnd")
+    return recipe
+}
+
+export {
+    recipes,
+    recipeDetails
+}

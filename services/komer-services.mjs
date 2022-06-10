@@ -11,6 +11,7 @@ export default function(groupData) {
     return {
         getPopRecipes : validateUser(getPopRecipes),
         getRecipesWithWord : validateUser(getRecipesWithWord),
+        getRecipe: validateUser(getRecipe),
         createGroup : validateUser(createGroup),
         editGroup : validateUser(editGroup),
         getAllGroups : validateUser(getAllGroups),
@@ -45,6 +46,14 @@ export default function(groupData) {
         if(!user) throw errors.INVALID_USER
         return groupData.getRecipesWithWord(word)
     }
+
+    async function getRecipe(userToken, id){
+        if(!id) throw errors.INVALID_ARGUMENT("id")
+        const user = await groupData.getUserByToken(userToken)
+        if(!user) throw errors.INVALID_USER
+        return groupData.getRecipe(id)
+    }
+
     //Creates a new group
     async function createGroup(userToken,name,description){
         if(!name) throw errors.INVALID_ARGUMENT("name")
@@ -97,5 +106,3 @@ export default function(groupData) {
         return groupData.createUser(userName)
     }   
 }
-
-

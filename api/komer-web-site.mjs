@@ -12,21 +12,24 @@ export default function (services){
     const app = express.Router()
 
     //Configure CRUD routes
-    app.get('/login', setUserTokenForm) // Creates a form to receive data to validate a user
-    app.post('/setUser', setUserToken) // Gets the user token
-    app.get('/home', handlerWrapper(home))//Main menu
-    app.get('/recipes', handlerWrapper(getPopRecipes))//Get the most popular recipes
-    app.get('/recipes/:word', handlerWrapper(getRecipesWithWord)) //Get all the recipes with given word --------Kinda Done----------
-    app.get('/groups/create', handlerWrapper(getCreatGroupForm)) //Creates a form to receive data to create a group
-    app.post('/group/create', handlerWrapper(createGroup)) //create a group providing a name and a description
-    app.get('/groups/edit/:id', handlerWrapper(editGroupForm)) //Creates a form to receive data to edit a group
-    app.post('/group/edit/:id' , handlerWrapper(editGroup)) //edit a group providing a name and a description
-    app.get('/groups', handlerWrapper(getAllGroups))   //Get all groups
-    app.post('/groups/delete/:id',handlerWrapper(deleteGroup)) //delete a group                         --------Kinda Done----------
-    app.get('/groups/:id',handlerWrapper(getGroupById))  //Gets a group by it's id
-    app.get('/groups/recipe/:word', handlerWrapper(addRecipeToGroupForm)) //Creates a form to receive data to add a recipe to a group
-    app.post('/groups/recipes/:groupId',handlerWrapper(addRecipeToGroup)) //add a recipe to a group
-    app.post('/groups/deleteRec/:groupId', handlerWrapper(deleteRecipeFromGroup)) //Removes a recipe from a group
+    app.get('/login', setUserTokenForm)                                                 // Creates a form to receive data to validate a user
+    app.post('/setUser', setUserToken)                                                  // Gets the user token
+    app.get('/home', handlerWrapper(home))                                              //Main menu
+    app.get('/recipes', handlerWrapper(getPopRecipes))                                  //Get the most popular recipes
+    app.get('/recipe/:word', handlerWrapper(getRecipe))                                 //Gets the recipe passed as a paremeter
+    app.get('/recipes/form', handlerWrapper(getRecipesWithWordForm))                    //Creates a form to receive data to search for a recipe
+    app.post('/recipes/redirect', handlerWrapper(redirectRecipeswithWord))              //Redirect's to the page that's received on the form
+    app.get('/recipes/:word', handlerWrapper(getRecipesWithWord))                       //Get all the recipes with given word 
+    app.get('/groups/create', handlerWrapper(getCreatGroupForm))                        //Creates a form to receive data to create a group
+    app.post('/group/create', handlerWrapper(createGroup))                              //create a group providing a name and a description
+    app.get('/groups/edit/:id', handlerWrapper(editGroupForm))                          //Creates a form to receive data to edit a group
+    app.post('/group/edit/:id' , handlerWrapper(editGroup))                             //edit a group providing a name and a description
+    app.get('/groups', handlerWrapper(getAllGroups))                                    //Get all groups
+    app.post('/groups/delete/:id',handlerWrapper(deleteGroup))                          //delete a group                         
+    app.get('/groups/:id',handlerWrapper(getGroupById))                                 //Gets a group by it's id
+    app.get('/groups/recipe/:word', handlerWrapper(addRecipeToGroupForm))               //Creates a form to receive data to add a recipe to a group
+    app.post('/groups/recipes/:groupId',handlerWrapper(addRecipeToGroup))               //add a recipe to a group
+    app.post('/groups/deleteRec/:groupId', handlerWrapper(deleteRecipeFromGroup))       //Removes a recipe from a group
 
     return app
     
@@ -45,7 +48,6 @@ export default function (services){
     function handlerWrapper(handler){
         return async function(req,res){
             req.token = userToken
-            //console.log(req.token)
             try {
                 await handler(req,res)
             } catch(e) {
@@ -61,8 +63,23 @@ export default function (services){
 
     //Functions that receive the request and response object, they execute the services functions.
     async function getPopRecipes(req,res){
-       const recipes = await services.getPopRecipes(req.token)
-       res.render('getPopRecipes',{r: recipes, title: `Most Popular Recipes`}) 
+        const recipes = await services.getPopRecipes(req.token)
+        res.render('getPopRecipes',{r: recipes, title: `Most Popular Recipes`}) 
+    }
+
+    async function getRecipe(req, res){
+        const aux = await services.getRecipesWithWord(req.token, req.params.word)
+        const recipe = await services.getRecipe(req.token, aux[0].id)
+        console.log("web-site ->" + recipe.id + "WebsiteFim")
+        res.render('getRecipe', {r:recipe, title: `${req.params.word}`})
+    }
+
+    async function getRecipesWithWordForm(req, res){
+        res.render('getRecipeWithWordForm', {title: 'Search Recipes'})
+    }
+
+    async function redirectRecipeswithWord(req, res){
+        res.redirect(`/recipes/${req.body.word}`)
     }
 
     async function getRecipesWithWord(req, res){
@@ -118,7 +135,6 @@ export default function (services){
     }
 
     async function deleteRecipeFromGroup(req,res){
-        console.log("RecipeId - " + req.body.recipeId + " GroupId - " + req.body.groupId)
         await services.deleteRecipeFromGroup(req.token,req.params.groupId, req.body.recipeId)
         res.redirect(`/groups/${req.params.groupId}`)
     }

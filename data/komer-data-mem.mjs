@@ -2,7 +2,7 @@
 // Implement data access to memory storage
 import { errors } from "../error.mjs"
 import crypto from 'crypto'
-import recipes from '../spoonacular-data.mjs'
+import {recipes, recipeDetails} from '../spoonacular-data.mjs'
 
 
 const USERS = [
@@ -32,6 +32,7 @@ export default function(){
         getUserByToken : getUserByToken,
         getPopRecipes : getPopRecipes,
         getRecipesWithWord : getRecipesWithWord,
+        getRecipe: getRecipe,
         createGroup : createGroup,
         editGroup : editGroup,
         getAllGroups : getAllGroups,
@@ -55,16 +56,20 @@ export default function(){
     }
 
     async function getRecipesWithWord(word){
-        const auxArr = recipes.filter(recipe => recipe.title.includes(word))
+        const auxArr = recipes.filter(recipe => recipe.title.toLowerCase().includes(word.toLowerCase()))
         if(auxArr.length == 0) throw errors.NOT_FOUND(`Recipe with ${word}`)
         return auxArr
+    }
+
+    async function getRecipe(id){
+        const recipe = await recipeDetails(id)
+        return recipe
     }
 
     async function createGroup(name,description,ownerUser){
         const newId = nextId++
         const newGroup = {id : newId, name : name , description : description, recipes: [],ownerUser:ownerUser.userId}
         groups.push(newGroup)
-        console.log(groups)
         return newGroup
 
     }
@@ -77,7 +82,6 @@ export default function(){
         }
         groups[idx].name = name
         groups[idx].description = description
-        console.log(groups)
         return groups[idx]
     }
 
@@ -98,7 +102,6 @@ export default function(){
             throw errors.INVALID_USER()
         }
         const deletedGroup = groups.splice(idx, 1)
-        console.log(groups)
         return deletedGroup
     }
 
@@ -139,7 +142,6 @@ export default function(){
         const idx = group.recipes.findIndex(r => r.id == recipeId)
         if(idx == -1) throw errors.NOT_FOUND("Recipe")
         group.recipes.splice(idx, 1)
-        console.log(groups)
         return group
     }
 

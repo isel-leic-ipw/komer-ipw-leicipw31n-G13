@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>
+            {{title}}
+        </title>
+    </head>
+    <body>
+        <h2>
+            {{title}}
+        </h2>
+        <br>
+        <form action="/recipes/redirect" method="POST" >
+            Insert a word to seach recipes:
+            <input type="text" id="word" name="word" required/> 
+            <input type="submit" value="Submit"/>   
+        </form>
+    </body>
+</html>
