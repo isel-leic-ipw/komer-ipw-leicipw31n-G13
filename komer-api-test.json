@@ -1,0 +1,975 @@
+{
+	"info": {
+		"_postman_id": "3077832e-ac0f-47db-be6e-d19f27be2541",
+		"name": "Trabalho2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18510765"
+	},
+	"item": [
+		{
+			"name": "Recipes",
+			"item": [
+				{
+					"name": "Get Popular Recipes(Done)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/recipes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"recipes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Recipes by Words of Title(Done)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:1904/api/recipes/word",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"recipes",
+								"word"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Groups",
+			"item": [
+				{
+					"name": "Create Group(Done)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"novo_nomesadsadsadsadsad\",\r\n    \"description\" : \"desc\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api//groups/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"",
+								"groups",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Group(Done)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\" : 2,\r\n    \"name\":\"ze manel da street\",\r\n    \"description\" : \"descrição do ze manel da street\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/groups/edit",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"groups",
+								"edit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Groups(Done)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:1904/api/groups/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"groups",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Group(Done)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\" : 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/groups/delete",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"groups",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Group by Id(Done)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/groups/id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"groups",
+								"id"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add a recipe to a group(Done)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":2,\r\n    \"recipe\": {\"id\": 2, \"title\": \"Massa com atum \", \"summary\": \" Massa com atum, uma delicia!\"}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/groups/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"groups",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove a recipe from a group(Done)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"groupId\" : 2,\r\n \"recipeId\" : 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/groups/remove",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"groups",
+								"remove"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"method": "PUT",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tests",
+			"item": [
+				{
+					"name": "Get Popular Recipes(Invalid User)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer de469902-4040-47ff-8ea9-5f8ee4efaadc",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/recipes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"recipes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Recipes by Word of Title(Invalid Word)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer de469902-4040-47ff-8ea9-5f8ee4efaadc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/recipes/word",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"recipes",
+								"word"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Recipes by Word of Title(Word Not Found)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer de469902-4040-47ff-8ea9-5f8ee4efaadc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"word\": \"abcd\"\r\n} ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/recipes/word",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"recipes",
+								"word"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Group (Invalid parametes)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer de469902-4040-47ff-8ea9-5f8ee4efaadc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\" : \"description for game xpto\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/groups",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Group(Unauthorized User)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer de469902-4040-47ff-8ea9-5f8ee4efaadc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\" : 3,\r\n    \"name\":\"group name\",\r\n    \"description\" : \"group description\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/groups/edit",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"groups",
+								"edit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Group(Invalid Parameters)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer de469902-4040-47ff-8ea9-5f8ee4efaadc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"group name\",\r\n    \"description\" : \"group description\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/groups/edit",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"groups",
+								"edit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Groups(No groups found)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer 286fc6f9-fdd6-4274-a783-5e1d3c36885e",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:1904/api/groups",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Group(Invalid Id)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer de469902-4040-47ff-8ea9-5f8ee4efaadc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/groups",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Group(Unauthorized User)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer de469902-4040-47ff-8ea9-5f8ee4efaadc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 3 \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/groups",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Group By Id(Invalid id)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer de469902-4040-47ff-8ea9-5f8ee4efaadc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/groups/id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"groups",
+								"id"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Group By Id(Unauthorized User)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer de469902-4040-47ff-8ea9-5f8ee4efaadc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/groups/id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"groups",
+								"id"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Group By Id(Wrong Id)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer de469902-4040-47ff-8ea9-5f8ee4efaadc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/groups/id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"groups",
+								"id"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add a recipe to a Group(Invalid Parameters)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer de469902-4040-47ff-8ea9-5f8ee4efaadc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"recipeId\": 776505\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/groups",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add a recipe to a Group(Parameter Not Found)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer de469902-4040-47ff-8ea9-5f8ee4efaadc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"recipeId\": 776505\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/groups",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add a recipe to a Group(Unauthorized User)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer de469902-4040-47ff-8ea9-5f8ee4efaadc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"groupId\":3,\r\n    \"recipeId\":2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/groups",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove a recipe from a group(Invalid parameter)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer de469902-4040-47ff-8ea9-5f8ee4efaadc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"recipeId\" : 776505\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/groups/delete",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"groups",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove a recipe from a group(Parameter not found)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer de469902-4040-47ff-8ea9-5f8ee4efaadc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"groupId\": 10,\r\n    \"recipeId\":3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/groups/delete",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"groups",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove a recipe from a group(Unauthorized User)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer de469902-4040-47ff-8ea9-5f8ee4efaadc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"groupId\" : 3,\r\n    \"recipeId\" : 776505\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/groups/delete",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"groups",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User(Invalid parameter)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1904/api/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1904",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

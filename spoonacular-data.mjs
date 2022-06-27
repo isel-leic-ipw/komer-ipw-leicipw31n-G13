@@ -13,9 +13,6 @@ const recipeArray = ['results']
 
 const returnRecipes = await fetchJSON(POP_RECIPES_URL).then(processRecipesPromises) 
    
-const recipes = recipesTreatement()
-console.log(recipes)
-
 function recipesTreatement(){
     let treatRecipes = []
     for(let i in returnRecipes){
@@ -49,11 +46,18 @@ async function recipeDetails(id){
     const recipe = filterProperties(arr, rec)
     recipe.summary = recipe.summary.replaceAll('<b>', '')
     recipe.summary = recipe.summary.replaceAll('</b>', '')
-    console.log("Recipe Details ->" + recipe + " Recipe DetailsEnd")
     return recipe
 }
 
+async function recipeWithWord(word){
+    const url = `https://api.spoonacular.com/recipes/information?apiKey=${KEY}/findByIngredients?ingredients=${word}`
+    const arr = ['title']
+    const rec = await fetchJSON(url)
+    const recipes = filterProperties(arr, rec)
+    return recipes
+}
+
 export {
-    recipes,
+    recipesTreatement,
     recipeDetails
 }

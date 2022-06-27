@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            {{title}}
+        </title>
+        <style>
+            a {
+                    color: black;
+                    background-color: transparent;
+                    text-decoration: none;
+                    }
+        </style>
+    </head> 
+    <body>
+        {{#each r}}
+        <div class="row">
+        <div class="col"> 
+        <h2>
+            <a aria-current="page" href="/recipe/{{this.title}}">{{title}}</a>
+        </h2>
+        <h5>
+            {{summary}}
+            {{ingredients}}
+            {{steps}}
+        </h5>
+        </div>
+        </div>
+        <hr>
+        {{/each}}
+    </body>
+</html>

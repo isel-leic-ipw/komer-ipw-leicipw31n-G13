@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            {{title}}
+        </title>
+    </head> 
+    <body>
+        <div class="row">
+        <div class="col"> 
+        <h2>
+            {{r.title}}
+        </h2>
+        <h4>
+            Recipe Id: {{r.id}}
+            <p></p>
+            Summary: {{r.summary}}
+            <br>
+            <p></p>
+            Ingredients:
+                {{#each r.extendedIngredients}}
+                    {{name}} - {{amount}};
+                {{/each}}
+            <p></p>
+            Steps:
+                    {{#each r.analyzedInstructions}}
+                        {{#each steps}}
+                            {{step}}
+                        {{/each}}
+                    {{/each}}
+            <p></p>
+            Recipe Spoonacular URI : <a href="{{spoonacularSourceUrl}}"> {{r.spoonacularSourceUrl}}</a>
+        </h4>
+        </div>
+        <div class = "col">
+        <button onclick="document.location='/groups/recipe/{{title}}'">Add this recipe to a group</button>
+        </div>
+        </div>
+        <hr>
+    </body>
+</html>
