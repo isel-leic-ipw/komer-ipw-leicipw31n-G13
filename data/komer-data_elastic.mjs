@@ -1,8 +1,7 @@
-//----------------------------
+//TODO:----------------------------
 import fetch from './fetch-wrapper.mjs'
 import uriManager from './uri-manager.mjs'
 import {errors} from '../error.mjs'
-//import {errors} from '../errors.mjs'
 
 export default function (){
     const INDEX_NAME = 'groups'

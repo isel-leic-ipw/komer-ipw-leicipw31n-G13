@@ -49,6 +49,3 @@ hbs.registerPartials(__dirname + '/views/partials');
 
 app.listen(PORT, () => console.log(`Example app listening at http://localhost:${PORT}`))
 
-function recordRequests(){
-    req.session.accesses
-}

@@ -6,31 +6,32 @@ import express from 'express'
 
 import handleError from './http-errors.mjs'
 
-let userToken
+let userToken = undefined
 
 export default function (services){
     const app = express.Router()
 
     //Configure CRUD routes
-    app.get('/login', setUserTokenForm)                                                 // Creates a form to receive data to validate a user
-    app.post('/setUser', setUserToken)                                                  // Gets the user token
-    app.get('/home', handlerWrapper(home))                                              //Main menu
+    app.get('/login', setUserTokenForm)                                                 //Creates a form to receive data to validate a user
+    app.post('/setUser', setUserToken)                                                  //Sets the user token
+    app.post('/user', handlerWrapper(createUser))                                       //Creates a new user
+    app.get('/', handlerWrapper(home))                                                  //Main menu
     app.get('/recipes', handlerWrapper(getPopRecipes))                                  //Get the most popular recipes
     app.get('/recipe/:word', handlerWrapper(getRecipe))                                 //Gets the recipe passed as a paremeter
     app.get('/recipes/form', handlerWrapper(getRecipesWithWordForm))                    //Creates a form to receive data to search for a recipe
     app.post('/recipes/redirect', handlerWrapper(redirectRecipeswithWord))              //Redirect's to the page that's received on the form
     app.get('/recipes/:word', handlerWrapper(getRecipesWithWord))                       //Get all the recipes with given word 
     app.get('/groups/create', handlerWrapper(getCreatGroupForm))                        //Creates a form to receive data to create a group
-    app.post('/group/create', handlerWrapper(createGroup))                              //create a group providing a name and a description
+    app.post('/group/create', handlerWrapper(createGroup))                              //Create a group providing a name and a description
     app.get('/groups/edit/:id', handlerWrapper(editGroupForm))                          //Creates a form to receive data to edit a group
-    app.post('/group/edit/:id' , handlerWrapper(editGroup))                             //edit a group providing a name and a description
+    app.post('/group/edit/:id' , handlerWrapper(editGroup))                             //Edit a group providing a name and a description
     app.get('/groups', handlerWrapper(getAllGroups))                                    //Get all groups
-    app.post('/groups/delete/:id',handlerWrapper(deleteGroup))                          //delete a group                         
+    app.post('/groups/delete/:id',handlerWrapper(deleteGroup))                          //Delete a group                         
     app.get('/groups/:id',handlerWrapper(getGroupById))                                 //Gets a group by it's id
     app.get('/groups/recipe/:word', handlerWrapper(addRecipeToGroupForm))               //Creates a form to receive data to add a recipe to a group
-    app.post('/groups/recipes/:groupId',handlerWrapper(addRecipeToGroup))               //add a recipe to a group
+    app.post('/groups/recipes/:groupId',handlerWrapper(addRecipeToGroup))               //Add a recipe to a group
     app.post('/groups/deleteRec/:groupId', handlerWrapper(deleteRecipeFromGroup))       //Removes a recipe from a group
-
+    
     return app
     
     async function setUserTokenForm(req, res){
@@ -39,9 +40,17 @@ export default function (services){
     }
 
     async function setUserToken(req, res){
-        userToken = req.body.userToken
+        const user = await services.getUserByName(req.body.username, req.body.password)
+        userToken = user.authToken
         req.token = userToken
-        res.redirect('/home')
+        res.redirect('/')
+    }
+
+    async function createUser(req, res){
+        const user = await services.createUser(req.body.username, req.body.password)
+        userToken = user.authToken
+        req.token = userToken
+        res.render(`user`, {u: user, title: `User ${user.token}`})
     }
 
     //Function that tries to execute the services functions if they throw an error then it's resolved and returns an object.
@@ -52,7 +61,8 @@ export default function (services){
                 await handler(req,res)
             } catch(e) {
                 const error = handleError(e)
-                res.status(error.status).json(error.body)
+                res.render('error', {e: error.body.error, title: `Error ${error.status}`})
+                //TODO: res.status(error.status).json(error.body) -> Não sei oq fazer com isto
             }
         }
     }
@@ -70,11 +80,11 @@ export default function (services){
     async function getRecipe(req, res){
         const aux = await services.getRecipesWithWord(req.token, req.params.word)
         const recipe = await services.getRecipe(req.token, aux[0].id)
-        console.log("web-site ->" + recipe.id + "WebsiteFim")
         res.render('getRecipe', {r:recipe, title: `${req.params.word}`})
     }
 
     async function getRecipesWithWordForm(req, res){
+        await services.getUserByToken(req.token)
         res.render('getRecipeWithWordForm', {title: 'Search Recipes'})
     }
 
@@ -89,6 +99,7 @@ export default function (services){
     }
 
     async function getCreatGroupForm(req, res){
+        await services.getUserByToken(req.token)
         res.render('createGroupForm', {title: `Data for new group`, createGroup: true})
     }
 
@@ -114,7 +125,7 @@ export default function (services){
     }
 
     async function deleteGroup(req,res){
-        const group = services.deleteGroup(req.token,req.params.id)
+        services.deleteGroup(req.token,req.params.id)
         res.redirect('/groups')
     }
 

@@ -2,13 +2,13 @@
 // Implement data access to memory storage
 import { errors } from "../error.mjs"
 import crypto from 'crypto'
-import {recipes, recipeDetails} from '../spoonacular-data.mjs'
+import {recipesTreatement, recipeDetails} from '../spoonacular-data.mjs'
 
 
 const USERS = [
-    {userId: 100,userName : 'User1',authToken:'de469902-4040-47ff-8ea9-5f8ee4efaadc'},
-    {userId: 101,userName : 'User2',authToken:'3669e303-5758-4479-b139-94b2475c8554'},
-    {userId: 102,userName : 'User3',authToken:'286fc6f9-fdd6-4274-a783-5e1d3c36885e'}
+    {userId: 100,userName : 'User1', password: '1', authToken:'de469902-4040-47ff-8ea9-5f8ee4efaadc'},
+    {userId: 101,userName : 'User2', password: '1', authToken:'3669e303-5758-4479-b139-94b2475c8554'},
+    {userId: 102,userName : 'User3', password: '1', authToken:'286fc6f9-fdd6-4274-a783-5e1d3c36885e'}
 ]
 
 let nextIdUser = USERS.length + 100
@@ -40,7 +40,8 @@ export default function(){
         addRecipeToGroup : addRecipeToGroup,
         getGroupById : getGroupById,
         deleteRecipeFromGroup : deleteRecipeFromGroup,
-        createUser: createUser
+        createUser: createUser,
+        getUserByName: getUserByName
     }
 
     async function getUserByToken(token){
@@ -50,13 +51,20 @@ export default function(){
         }
         return user
     }
-       
+    
+    async function getUserByName(username, password){
+        const user = USERS.find(u => u.userName == username)
+        if(!user) throw errors.INVALID_ARGUMENT("username")
+        if(user.password != password) throw errors.INVALID_ARGUMENT("password")
+        return user
+    }
+
     async function getPopRecipes(){
-        return recipes
+        return recipesTreatement()
     }
 
     async function getRecipesWithWord(word){
-        const auxArr = recipes.filter(recipe => recipe.title.toLowerCase().includes(word.toLowerCase()))
+        const auxArr = recipesTreatement().filter(recipe => recipe.title.toLowerCase().includes(word.toLowerCase()))
         if(auxArr.length == 0) throw errors.NOT_FOUND(`Recipe with ${word}`)
         return auxArr
     }
@@ -122,7 +130,7 @@ export default function(){
         if(groups[idx].ownerUser != userId){
             throw errors.INVALID_USER()
         }
-        const recipe = recipes.find(r => r.id == recipeId)
+        const recipe = recipesTreatement().find(r => r.id == recipeId)
         if(recipe == undefined) throw errors.NOT_FOUND("Recipe")
         if(groups[idx].recipes.find(r => r.id == recipeId) == undefined){
             groups[idx].recipes.push(recipe)
@@ -145,13 +153,14 @@ export default function(){
         return group
     }
 
-    async function createUser(userName){
+    async function createUser(userName, password){
         let userToken = crypto.randomUUID()
         while(USERS.find(u => u.authToken == userToken)!= undefined){
             userToken = crypto.randomUUID()
         }
-        const user = {userId: nextIdUser ,userName : userName ,authToken: userToken}
+        const user = {userId: nextIdUser, userName : userName, password: password, authToken: userToken}
         USERS.push(user)
+        nextIdUser++
         return user
     }
 }

@@ -23,7 +23,7 @@ export default function (services){
     app.delete('/groups/delete', handlerWrapper(deleteRecipeFromGroup)) //Removes a recipe from a group
     app.put('/users',handlerWrapper(createUser)) //Creates a new user
 
-   return app
+    return app
 
     function setUserToken(req){
         const token = req.get("Authorization")

@@ -19,7 +19,9 @@ export default function(groupData) {
         getGroupById : validateUser(getGroupById),
         addRecipeToGroup : validateUser(addRecipeToGroup),
         deleteRecipeFromGroup : validateUser(deleteRecipeFromGroup),
-        createUser: validateUser(createUser)
+        createUser: validateUser(createUser),
+        getUserByToken: validateUser(getUserByToken),
+        getUserByName: validateUser(getUserByName)
     }     
 
     function validateUser(f){
@@ -36,21 +38,21 @@ export default function(groupData) {
     //Gets the most popular recipes
     async function getPopRecipes(userToken){
         const user = await (userToken)
-        if(!user) throw errors.INVALID_USER
+        if(!user) throw errors.NOT_FOUND("User")
         return groupData.getPopRecipes()
     }
     //Searches for the recipes with the given word in the title
     async function getRecipesWithWord(userToken,word){
         if(!word) throw errors.INVALID_ARGUMENT("word")
         const user = await groupData.getUserByToken(userToken)
-        if(!user) throw errors.INVALID_USER
+        if(!user) throw errors.NOT_FOUND("User")
         return groupData.getRecipesWithWord(word)
     }
 
     async function getRecipe(userToken, id){
         if(!id) throw errors.INVALID_ARGUMENT("id")
         const user = await groupData.getUserByToken(userToken)
-        if(!user) throw errors.INVALID_USER
+        if(!user) throw errors.NOT_FOUND("User") 
         return groupData.getRecipe(id)
     }
 
@@ -59,7 +61,7 @@ export default function(groupData) {
         if(!name) throw errors.INVALID_ARGUMENT("name")
         if(!description) throw errors.INVALID_ARGUMENT("description")
         const ownerUser = await groupData.getUserByToken(userToken)
-        return groupData.createGroup(name,description, ownerUser)   
+        return groupData.createGroup(name, description, ownerUser)   
     }
     //Edits a group's name and description
     async function editGroup(userToken,id, name, description){
@@ -101,8 +103,21 @@ export default function(groupData) {
         return groupData.deleteRecipeFromGroup(user.userId,groupId, recipeId)
     }
     //Creates a new user
-    async function createUser(userName){
+    async function createUser(userName, password){
         if(!userName) throw errors.INVALID_ARGUMENT("userName")
-        return groupData.createUser(userName)
+        return groupData.createUser(userName, password)
     }   
+    //Returns a user with the respective Token
+    async function getUserByToken(userToken){
+        if(!userToken) {    
+            throw errors.NOT_FOUND("User")
+        }    
+        return groupData.getUserByToken(userToken)
+    }
+
+    async function getUserByName(username, password){
+        if(!username) throw errors.INVALID_ARGUMENT("userName")
+        if(!password) throw errors.INVALID_ARGUMENT("password")
+        return groupData.getUserByName(username, password)
+    }
 }

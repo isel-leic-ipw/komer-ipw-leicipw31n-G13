@@ -2,7 +2,7 @@
 
 import fetch from "node-fetch";
 
-const KEY = "2080371aedf049c8b72cd887b2ec9b54"
+const KEY = "bc3e95af194f4cb9b657bcb7932e0672"
 const POP_RECIPES_URL = `https://api.spoonacular.com/recipes/complexSearch?apiKey=${KEY}`
 
 async function fetchJSON(url){
@@ -49,7 +49,7 @@ async function recipeDetails(id){
     return recipe
 }
 
-async function recipeWithWord(word){
+async function getRecipesWithWord(word){
     const url = `https://api.spoonacular.com/recipes/information?apiKey=${KEY}/findByIngredients?ingredients=${word}`
     const arr = ['title']
     const rec = await fetchJSON(url)
@@ -59,5 +59,6 @@ async function recipeWithWord(word){
 
 export {
     recipesTreatement,
-    recipeDetails
+    recipeDetails,
+    getRecipesWithWord
 }

@@ -1,20 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>
-            {{title}}
-        </title>
-    </head>
     <body>
-        <h1>
-            {{title}}
-        </h1>
-        <br>
         <form action="/setUser" method="POST" >
-            <h5>Login:</h5>
-            Insert user token
-            <input type="password" id="userToken" name="userToken" required/> 
+            <h3>Login:</h3>
+            <div>
+                username: <input type="text" name="username" required/> 
+            </div>
+            <div>
+                password: <input type="password" name="password" required/>
+            </div>
             <input type="submit" value="Submit"/>
+        </form>
+        <form method="POST" action="/user">
+            <h3>Sign up:</h3>
+            <div>
+                username: <input type="text" name="username" required/>
+            </div>
+            <div>
+                password: <input type="password" name="password" required/>
+            </div>
+            <input type="submit" value="Submit">
         </form>
     </body>
 </html>
